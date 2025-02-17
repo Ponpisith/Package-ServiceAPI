@@ -4,22 +4,21 @@ import 'package:serviceapi/constant/httpmethods.dart';
 
 class ServiceAPI {
   late final Dio _dio;
-  // final BuildContext context;
-  final String baseURL;
-  final String port;
+  final String _baseURL;
+  final String _port;
   final Map<String, String>? headers;
 
   ServiceAPI({
-    // required this.context,
-    required this.baseURL,
-    required this.port,
+    required String baseURL,
+    required String port,
     this.headers, // Optional headers
-  }) {
+  })  : _baseURL = baseURL,
+        _port = port {
     _dio = Dio();
     _configureDio();
   }
 
-  String get _pathAPI => '$baseURL${port.isNotEmpty ? ':$port' : ''}';
+  String get _pathAPI => '$_baseURL${_port.isNotEmpty ? ':$_port' : ''}';
 
   void _configureDio() {
     _dio.options = BaseOptions(
@@ -147,5 +146,5 @@ class ServiceAPI {
   }
 
   void showBaseURL() => debugPrint('BaseURL: $_pathAPI');
-  void showPort() => debugPrint('Port: $port');
+  void showPort() => debugPrint('Port: $_port');
 }

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:serviceapi/constant/httpmethods.dart';
-import 'package:serviceapi/serviceapi.dart';
+import 'package:serviceapi/ServiceAPI.dart';
 import 'package:serviceapi/util/formdata.dart';
 
 void main() async {
