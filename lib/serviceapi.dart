@@ -5,18 +5,16 @@ import 'package:serviceapi/util/handleError.dart';
 
 class ServiceAPI {
   late final Dio _dio;
-  final BuildContext context;
+  // final BuildContext context;
   final String baseURL;
   final String port;
-  final String endpoint;
   final Map<String, String>? headers;
 
   ServiceAPI(
-    this._dio, {
-    required this.context,
+    {
+    // required this.context,
     required this.baseURL,
     required this.port,
-    required this.endpoint,
     this.headers, // Optional headers
   }) {
     _dio = Dio();
@@ -28,9 +26,9 @@ class ServiceAPI {
   void _configureDio() {
     _dio.options = BaseOptions(
       baseUrl: _pathAPI,
-      connectTimeout: const Duration(milliseconds: 10),
-      receiveTimeout: const Duration(milliseconds: 5),
-      sendTimeout: const Duration(milliseconds: 5),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 5),
+      sendTimeout: const Duration(seconds: 5),
       contentType: 'application/json',
       headers: {
         'Accept': 'application/json',
@@ -61,8 +59,8 @@ class ServiceAPI {
     ));
   }
 
-  Future<Response> request(
-    String endpoint, {
+  Future<Response> request({
+    required String endpoint,
     Object? data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
@@ -121,7 +119,7 @@ class ServiceAPI {
       if (retryCount > 0) {
         debugPrint("Retrying... attempts left: $retryCount");
         return request(
-          endpoint,
+          endpoint: endpoint,
           data: data,
           queryParameters: queryParameters,
           cancelToken: cancelToken,
@@ -133,10 +131,10 @@ class ServiceAPI {
         );
       }
       debugPrint("Request failed: ${e.message}");
-      HandleError(
-          context: context,
-          title: 'Error',
-          content: e.message ?? 'Unknow Error');
+      // HandleError(
+      //     context: context,
+      //     title: 'Error',
+      //     content: e.message ?? 'Unknow Error');
       rethrow;
     }
     return response;
