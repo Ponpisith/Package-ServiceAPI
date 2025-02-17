@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:serviceapi/constant/httpmethods.dart';
 import 'package:serviceapi/ServiceAPI.dart';
 import 'package:serviceapi/util/formdata.dart';
 
 void main() async {
-  await dotenv.load(fileName: '.env');
   final api = ServiceAPI(
     baseURL: 'https://jsonplaceholder.typicode.com/',
     port: '',
@@ -69,8 +67,8 @@ void main() async {
       });
 
       final apiUploadFile = ServiceAPI(
-          baseURL: dotenv.get('BASE_URL'),
-          port: dotenv.get('PORT'),
+          baseURL: 'http://10.101.10.139',
+          port: '3000',
           headers: {'Authorization': 'Bearer $mockToken'});
 
       // Mock the response
