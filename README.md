@@ -6,26 +6,9 @@ A Flutter package that provides awesome functionalities for your app. 🚀
 
 ## 📥 Installation
 
-### Option 1: Install from **pub.dev** (If available)
-Add this line to your `pubspec.yaml` under `dependencies`:
-
 ```yaml
 dependencies:
-  my_flutter_package: latest_version
-```
-
-Then run:
-
-```sh
-flutter pub get
-```
-
-### Option 2: Install Directly from **GitHub**
-If the package is not on pub.dev, you can add it directly from GitHub:
-
-```yaml
-dependencies:
-  my_flutter_package:
+  serviceapi:
     git:
       url: https://github.com/username/my_flutter_package.git
       ref: main  # Replace with the branch/tag/commit you want
