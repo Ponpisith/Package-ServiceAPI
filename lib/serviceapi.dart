@@ -6,14 +6,16 @@ class ServiceAPI {
   late final Dio _dio;
   final String _baseURL;
   final String _port;
-  final Map<String, String>? headers;
+  final Map<String, String>? _headers;
 
   ServiceAPI({
     required String baseURL,
     required String port,
-    this.headers, // Optional headers
+    Map<String,String>? headers, // Optional headers
   })  : _baseURL = baseURL,
-        _port = port {
+        _port = port,
+        _headers = headers??{}
+         {
     _dio = Dio();
     _configureDio();
   }
@@ -29,7 +31,7 @@ class ServiceAPI {
       contentType: 'application/json',
       headers: {
         'Accept': 'application/json',
-        ...?headers,
+        ...?_headers,
       },
     );
 
