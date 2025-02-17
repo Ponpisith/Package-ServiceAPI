@@ -4,8 +4,8 @@ import 'package:serviceapi/serviceapi.dart';
 
 void main() async {
   final api = ServiceAPI(
-    baseURL: 'https://api.example.com',
-    port: '8080',
+    baseURL: 'https://jsonplaceholder.typicode.com/',
+    port: '',
     headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},
   );
 
@@ -13,7 +13,7 @@ void main() async {
     final response = await api.request(
       endpoint: 'users',
       httpMethod: Httpmethods.GET,
-      retryCount: 2, // Retries twice on failure
+      retryCount: 2,
     );
     debugPrint("Response: ${response.data}");
   } catch (e) {
