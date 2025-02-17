@@ -1,15 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:serviceapi/constant/httpmethods.dart';
+import 'package:serviceapi/util/handleError.dart';
 
 class ServiceAPI {
   late final Dio _dio;
+  final BuildContext context;
   final String baseURL;
   final String port;
   final String endpoint;
-  final Map<String, String>? headers; // Allow custom headers
+  final Map<String, String>? headers;
 
-  ServiceAPI({
+  ServiceAPI(
+    this._dio, {
+    required this.context,
     required this.baseURL,
     required this.port,
     required this.endpoint,
@@ -129,6 +133,10 @@ class ServiceAPI {
         );
       }
       debugPrint("Request failed: ${e.message}");
+      HandleError(
+          context: context,
+          title: 'Error',
+          content: e.message ?? 'Unknow Error');
       rethrow;
     }
     return response;
