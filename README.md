@@ -10,7 +10,7 @@ A Flutter package that provides awesome functionalities for your app. 🚀
 dependencies:
   serviceapi:
     git:
-      url: https://github.com/username/my_flutter_package.git
+      url: https://github.com/Ponpisith/Package-ServiceAPI.git
       ref: main  # Replace with the branch/tag/commit you want
 ```
 
