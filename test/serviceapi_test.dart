@@ -1,8 +1,14 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:serviceapi/constant/httpmethods.dart';
 import 'package:serviceapi/serviceapi.dart';
+import 'package:serviceapi/util/formdata.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   final api = ServiceAPI(
     baseURL: 'https://jsonplaceholder.typicode.com/',
     port: '',
@@ -12,20 +18,20 @@ void main() {
   group('CRUD Testing', () {
     test('GET API Test', () async {
       final response =
-          await api.request(endpoint: 'users', httpMethod: Httpmethods.GET);
+          await api.sendRequest(endpoint: 'users', httpMethod: Httpmethods.get);
       expect(response.data, isNotNull);
     });
 
     test('POST API Test', () async {
-      final response =
-          await api.request(endpoint: 'posts', httpMethod: Httpmethods.POST);
+      final response = await api.sendRequest(
+          endpoint: 'posts', httpMethod: Httpmethods.post);
       expect(response.data, {'id': 101});
     });
 
     test('PUT API Test', () async {
-      final response = await api.request(
+      final response = await api.sendRequest(
         endpoint: 'posts/1', // Updating post with ID 1
-        httpMethod: Httpmethods.PUT,
+        httpMethod: Httpmethods.put,
         data: {
           "title": "Updated Title",
           "body": "Updated content",
@@ -41,19 +47,46 @@ void main() {
     });
 
     test('DELETE API Test', () async {
-      final response = await api.request(
+      final response = await api.sendRequest(
         endpoint: 'posts/1', // Deleting post with ID 1
-        httpMethod: Httpmethods.DELETE,
+        httpMethod: Httpmethods.delete,
       );
       expect(response.statusCode, 200);
     });
-  });
 
-  // group('Service Handle Error', () {
-  //   test('GET API Test', () async {
-  //     final response =
-  //         await api.request(endpoint: 'usersa', httpMethod: Httpmethods.GET);
-  //     expect(response.statusCode, 404);
-  //   });
-  // });
+    test('UploadFile API', () async {
+      final mockToken =
+          'U2FsdGVkX1/gFJMIQqEtvxucO1Ao8Sf0CxhyIT5bGpfcYzFfvGdorSYcQvTLQ8WgYyW5Liu+cz1hklgnMaymYUFDEifaqOxLWknpwuGzbNo=';
+
+      FormData formdata = await FormdataUtil.createFormData({
+        'title': 'title test',
+        'description': 'description test'
+      }, files: {
+        'files': [
+          File('assets/files/example_file01.jpg'),
+          File('assets/files/example_file02.png')
+        ],
+      });
+
+      final apiUploadFile = ServiceAPI(
+          baseURL: dotenv.get('BASE_URL'),
+          port: dotenv.get('PORT'),
+          headers: {'Authorization': 'Bearer $mockToken'});
+
+      // Mock the response
+      final mockResponse = {
+        'statusCode': 201,
+        'message': 'Create Annoucement Successfully'
+      };
+
+      // Call the sendRequest method and send formData
+      final response = await apiUploadFile.sendRequest(
+          endpoint: '/api/v1/announcement/create',
+          httpMethod: Httpmethods.post,
+          formdata: formdata);
+
+      // Verify the response
+      expect(response.statusCode, mockResponse['statusCode']);
+    });
+  });
 }

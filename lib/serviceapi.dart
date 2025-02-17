@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:serviceapi/constant/httpmethods.dart';
-import 'package:serviceapi/util/handleError.dart';
 
 class ServiceAPI {
   late final Dio _dio;
@@ -10,8 +9,7 @@ class ServiceAPI {
   final String port;
   final Map<String, String>? headers;
 
-  ServiceAPI(
-    {
+  ServiceAPI({
     // required this.context,
     required this.baseURL,
     required this.port,
@@ -59,8 +57,9 @@ class ServiceAPI {
     ));
   }
 
-  Future<Response> request({
+  Future<Response> sendRequest({
     required String endpoint,
+    FormData? formdata,
     Object? data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
@@ -74,7 +73,7 @@ class ServiceAPI {
 
     try {
       switch (httpMethod) {
-        case Httpmethods.GET:
+        case Httpmethods.get:
           response = await _dio.get(
             endpoint,
             queryParameters: queryParameters,
@@ -83,10 +82,10 @@ class ServiceAPI {
             onReceiveProgress: onReceiveProgress,
           );
           break;
-        case Httpmethods.POST:
+        case Httpmethods.post:
           response = await _dio.post(
             endpoint,
-            data: data,
+            data: data ?? formdata,
             queryParameters: queryParameters,
             cancelToken: cancelToken,
             options: options,
@@ -94,10 +93,10 @@ class ServiceAPI {
             onReceiveProgress: onReceiveProgress,
           );
           break;
-        case Httpmethods.PUT:
+        case Httpmethods.put:
           response = await _dio.put(
             endpoint,
-            data: data,
+            data: data ?? formdata,
             queryParameters: queryParameters,
             cancelToken: cancelToken,
             options: options,
@@ -105,10 +104,21 @@ class ServiceAPI {
             onReceiveProgress: onReceiveProgress,
           );
           break;
-        case Httpmethods.DELETE:
+        case Httpmethods.patch:
+          response = await _dio.patch(
+            endpoint,
+            data: data ?? formdata,
+            queryParameters: queryParameters,
+            cancelToken: cancelToken,
+            options: options,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+          );
+          break;
+        case Httpmethods.delete:
           response = await _dio.delete(
             endpoint,
-            data: data,
+            data: data ?? formdata,
             queryParameters: queryParameters,
             cancelToken: cancelToken,
             options: options,
@@ -118,9 +128,9 @@ class ServiceAPI {
     } on DioException catch (e) {
       if (retryCount > 0) {
         debugPrint("Retrying... attempts left: $retryCount");
-        return request(
+        return sendRequest(
           endpoint: endpoint,
-          data: data,
+          data: data ?? formdata,
           queryParameters: queryParameters,
           cancelToken: cancelToken,
           options: options,
@@ -131,10 +141,6 @@ class ServiceAPI {
         );
       }
       debugPrint("Request failed: ${e.message}");
-      // HandleError(
-      //     context: context,
-      //     title: 'Error',
-      //     content: e.message ?? 'Unknow Error');
       rethrow;
     }
     return response;
