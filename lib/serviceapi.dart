@@ -21,7 +21,7 @@ class ServiceAPI {
     _configureDio();
   }
 
-  String get _pathAPI => '$baseURL${port.isNotEmpty ? ':$port' : ''}/';
+  String get _pathAPI => '$baseURL${port.isNotEmpty ? ':$port' : ''}';
 
   void _configureDio() {
     _dio.options = BaseOptions(
