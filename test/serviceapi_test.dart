@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:serviceapi/constant/authorization.dart';
 import 'package:serviceapi/constant/httpmethods.dart';
 import 'package:serviceapi/ServiceAPI.dart';
 import 'package:serviceapi/util/formdata.dart';
@@ -10,7 +11,6 @@ void main() async {
   final api = ServiceAPI(
     baseURL: 'https://jsonplaceholder.typicode.com/',
     port: '',
-    headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},
   );
 
   group('CRUD Testing', () {
@@ -54,7 +54,8 @@ void main() async {
 
     test('UploadFile API', () async {
       final mockToken =
-          'U2FsdGVkX1/gFJMIQqEtvxucO1Ao8Sf0CxhyIT5bGpfcYzFfvGdorSYcQvTLQ8WgYyW5Liu+cz1hklgnMaymYUFDEifaqOxLWknpwuGzbNo=';
+          'U2FsdGVkX1/UI5UhvQI09P/ftXd6MDphoK7n80G73MjE817oiGHBVNgScMDvnwy8dkGnY0lEfiyMPreGixCFv9GwVKLgOpx4Hbyq6dI/E44=';
+          
 
       FormData formdata = await FormdataUtil.createFormData({
         'title': 'title test',
@@ -69,7 +70,9 @@ void main() async {
       final apiUploadFile = ServiceAPI(
           baseURL: 'http://10.101.10.139',
           port: '3000',
-          headers: {'Authorization': 'Bearer $mockToken'});
+          authorization: Authorization.BearerToken,
+          token: mockToken);
+
 
       // Mock the response
       final mockResponse = {

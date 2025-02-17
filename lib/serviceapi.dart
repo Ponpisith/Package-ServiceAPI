@@ -1,26 +1,53 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:serviceapi/constant/httpmethods.dart';
+
+import 'constant/authorization.dart';
+import 'constant/httpmethods.dart';
 
 class ServiceAPI {
   late final Dio _dio;
   final String _baseURL;
   final String _port;
-  final Map<String, String>? _headers;
+  final Map<String, String>? _headers; //? Optional
+  final Authorization _authorization;
+  final String? _token;
 
   ServiceAPI({
+    String? token,
+    Map<String, String>? headers, // Optional headers
+    Authorization? authorization,
     required String baseURL,
     required String port,
-    Map<String,String>? headers, // Optional headers
   })  : _baseURL = baseURL,
         _port = port,
-        _headers = headers??{}
-         {
+        _headers = headers ?? {},
+        _authorization = authorization ?? Authorization.None,
+        _token = token {
     _dio = Dio();
     _configureDio();
   }
 
   String get _pathAPI => '$_baseURL${_port.isNotEmpty ? ':$_port' : ''}';
+
+  Map<String, dynamic>? _buildHeaders(
+      Authorization authorization, String? token) {
+    debugPrint('Authorization : $authorization');
+    debugPrint('Token : $token');
+    if (_headers!.isNotEmpty) {
+      return _headers;
+    }
+    final baseHeaders = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    if (authorization == Authorization.BearerToken && token != null) {
+      baseHeaders['authorization'] = 'Bearer $token';
+    }
+
+    debugPrint('baseHeaders : $baseHeaders');
+    return baseHeaders;
+  }
 
   void _configureDio() {
     _dio.options = BaseOptions(
@@ -28,11 +55,7 @@ class ServiceAPI {
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 5),
       sendTimeout: const Duration(seconds: 5),
-      contentType: 'application/json',
-      headers: {
-        'Accept': 'application/json',
-        ...?_headers,
-      },
+      headers: _buildHeaders(_authorization, _token),
     );
 
     _dio.interceptors.add(LogInterceptor(
