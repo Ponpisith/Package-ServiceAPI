@@ -8,12 +8,12 @@ import 'package:serviceapi/ServiceAPI.dart';
 import 'package:serviceapi/util/formdata.dart';
 
 void main() async {
-  final api = ServiceAPI(
-    baseURL: 'https://jsonplaceholder.typicode.com/',
-    port: '',
-  );
-
   group('CRUD Testing', () {
+    final api = ServiceAPI(
+      baseURL: 'https://jsonplaceholder.typicode.com/',
+      port: '',
+    );
+
     test('GET API Test', () async {
       final response =
           await api.sendRequest(endpoint: 'users', httpMethod: Httpmethods.get);
@@ -55,7 +55,6 @@ void main() async {
     test('UploadFile API', () async {
       final mockToken =
           'U2FsdGVkX1/UI5UhvQI09P/ftXd6MDphoK7n80G73MjE817oiGHBVNgScMDvnwy8dkGnY0lEfiyMPreGixCFv9GwVKLgOpx4Hbyq6dI/E44=';
-          
 
       FormData formdata = await FormdataUtil.createFormData({
         'title': 'title test',
@@ -70,9 +69,8 @@ void main() async {
       final apiUploadFile = ServiceAPI(
           baseURL: 'http://10.101.10.139',
           port: '3000',
-          authorization: Authorization.BearerToken,
+          authorization: Authorization.bearerToken,
           token: mockToken);
-
 
       // Mock the response
       final mockResponse = {

@@ -21,13 +21,16 @@ class ServiceAPI {
   })  : _baseURL = baseURL,
         _port = port,
         _headers = headers ?? {},
-        _authorization = authorization ?? Authorization.None,
+        _authorization = authorization ?? Authorization.none,
         _token = token {
     _dio = Dio();
     _configureDio();
   }
 
-  String get _pathAPI => '$_baseURL${_port.isNotEmpty ? ':$_port' : ''}';
+  String get _pathAPI {
+    final portSegment = _port.isNotEmpty ? ':$_port' : '';
+    return '$_baseURL$portSegment';
+  }
 
   Map<String, dynamic>? _buildHeaders(
       Authorization authorization, String? token) {
@@ -41,7 +44,7 @@ class ServiceAPI {
       'Accept': 'application/json',
     };
 
-    if (authorization == Authorization.BearerToken && token != null) {
+    if (authorization == Authorization.bearerToken && token != null) {
       baseHeaders['authorization'] = 'Bearer $token';
     }
 
@@ -91,7 +94,7 @@ class ServiceAPI {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
     required Httpmethods httpMethod,
-    int retryCount = 0, // Retry count for failed requests
+    int retryCount = 0, //? Retry count for failed requests
   }) async {
     late Response response;
 

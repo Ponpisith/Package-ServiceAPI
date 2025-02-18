@@ -1,4 +1,4 @@
 enum Authorization {
-  BearerToken,
-  None,
+  bearerToken,
+  none,
 }
